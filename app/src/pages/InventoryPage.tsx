@@ -28,6 +28,7 @@ export default function InventoryPage() {
   const [healthData, setHealthData] = useState<InventoryHealth[]>([]);
   const [summary, setSummary] = useState<any>(null);
   const [transfers, setTransfers] = useState<TransferSuggestion[]>([]);
+  const _t = t as Record<string, string>;
 
   useEffect(() => {
     if (loaded) {
@@ -51,15 +52,15 @@ export default function InventoryPage() {
   const pieData = useMemo(() => {
     if (!summary) return [];
     return [
-      { name: '爆款', value: summary.hot_count, key: 'hot' },
-      { name: '滞销', value: summary.slow_count, key: 'slow' },
-      { name: '积压', value: summary.overstock_count, key: 'overstock' },
-      { name: '缺货', value: summary.shortage_count, key: 'shortage' },
-      { name: '临期', value: summary.near_expiry_count, key: 'near_expiry' },
-      { name: '危急', value: summary.critical_count, key: 'critical' },
-      { name: '健康', value: summary.healthy_count, key: 'healthy' },
+      { name: _t['inventory_status_hot'] || 'Hot Seller', value: summary.hot_count, key: 'hot' },
+      { name: _t['inventory_status_slow'] || 'Slow Mover', value: summary.slow_count, key: 'slow' },
+      { name: _t['inventory_status_overstock'] || 'Overstock', value: summary.overstock_count, key: 'overstock' },
+      { name: _t['inventory_status_shortage'] || 'Shortage', value: summary.shortage_count, key: 'shortage' },
+      { name: _t['inventory_status_near_expiry'] || 'Near Expiry', value: summary.near_expiry_count, key: 'near_expiry' },
+      { name: _t['inventory_status_critical'] || 'Critical', value: summary.critical_count, key: 'critical' },
+      { name: _t['inventory_status_healthy'] || 'Healthy', value: summary.healthy_count, key: 'healthy' },
     ].filter(d => d.value > 0);
-  }, [summary]);
+  }, [summary, _t]);
 
   const categoryBarData = useMemo(() => {
     if (!loaded) return [];

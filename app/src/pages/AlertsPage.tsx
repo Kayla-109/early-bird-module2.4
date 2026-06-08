@@ -9,13 +9,15 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Bell, AlertTriangle, AlertCircle, Info, CheckCircle, PackageSearch, TrendingUp, Clock, Thermometer } from 'lucide-react';
 
-const typeConfig: Record<AlertType, { icon: any; label: string; color: string }> = {
-  stockout: { icon: PackageSearch, label: '缺货预警', color: '#FF4D4F' },
-  overstock: { icon: TrendingUp, label: '积压告警', color: '#1890FF' },
-  near_expiry: { icon: Clock, label: '临期预警', color: '#FAAD14' },
-  slow_mover: { icon: Thermometer, label: '滞销提醒', color: '#6b7280' },
-  promotion_opportunity: { icon: Bell, label: '促销机会', color: '#34d399' },
-};
+function getTypeConfig(t: Record<string, string>): Record<AlertType, { icon: any; label: string; color: string }> {
+  return {
+    stockout: { icon: PackageSearch, label: t['alert_type_stockout'] || 'Stockout Alert', color: '#FF4D4F' },
+    overstock: { icon: TrendingUp, label: t['alert_type_overstock'] || 'Overstock Alert', color: '#1890FF' },
+    near_expiry: { icon: Clock, label: t['alert_type_near_expiry'] || 'Near Expiry Alert', color: '#FAAD14' },
+    slow_mover: { icon: Thermometer, label: t['alert_type_slow_mover'] || 'Slow Mover Alert', color: '#6b7280' },
+    promotion_opportunity: { icon: Bell, label: t['promotion_opportunity'] || 'Promotion Opportunity', color: '#34d399' },
+  };
+}
 
 const severityConfig: Record<AlertSeverity, { icon: any; bg: string; border: string; text: string }> = {
   critical: { icon: AlertTriangle, bg: 'bg-red-500/10', border: 'border-red-500/20', text: 'text-red-400' },
@@ -28,6 +30,8 @@ export default function AlertsPage() {
   const [alerts, setAlerts] = useState<AlertItem[]>([]);
   const [loaded, setLoaded] = useState(() => dataEngine.loaded);
   const [activeTab, setActiveTab] = useState('all');
+  const _t = t as Record<string, string>;
+  const typeConfig = getTypeConfig(_t);
 
   useEffect(() => {
     if (loaded) {
@@ -126,7 +130,7 @@ export default function AlertsPage() {
                       <span className={`text-sm font-medium ${alert.read ? 'text-slate-500' : 'text-slate-200'}`}>{alert.title}</span>
                       <Badge className={`text-[10px] h-5 ${sevCfg.bg} ${sevCfg.text} ${sevCfg.border}`}>
                         <SevIcon size={10} className="mr-1" />
-                        {alert.severity === 'critical' ? '紧急' : alert.severity === 'warning' ? '警告' : '提示'}
+                        {alert.severity === 'critical' ? (_t['alert_severity_critical'] || 'Critical') : alert.severity === 'warning' ? (_t['alert_severity_warning'] || 'Warning') : (_t['alert_severity_info'] || 'Info')}
                       </Badge>
                       {!alert.read && <div className="w-2 h-2 rounded-full bg-red-500" />}
                     </div>

@@ -77,19 +77,19 @@ export async function generateReplenishmentRecommendations(
     if (daysLeft < 3 || ti.on_hand_units < ti.safety_stock) {
       urgency = 'critical';
       suggestedDate = today;
-      reason = daysLeft < 3 ? '库存可销天数不足3天' : '库存低于安全库存';
+      reason = daysLeft < 3 ? 'Days of supply less than 3' : 'Stock below safety level';
     } else if (daysLeft < 7) {
       urgency = 'high';
       suggestedDate = addDays(today, 1);
-      reason = '库存可销天数不足7天';
+      reason = 'Days of supply less than 7';
     } else if (daysLeft < 14) {
       urgency = 'medium';
       suggestedDate = addDays(today, 3);
-      reason = '库存可销天数不足14天';
+      reason = 'Days of supply less than 14';
     } else if (suggestedQty > 0) {
       urgency = 'low';
       suggestedDate = addDays(today, 7);
-      reason = '常规补货周期';
+      reason = 'Regular replenishment cycle';
     }
 
     if (suggestedQty > 0) {

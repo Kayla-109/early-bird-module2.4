@@ -70,47 +70,47 @@ export async function diagnoseInventory(): Promise<{
       status = 'hot';
       hot_count++;
       health_score = 50;
-      recs.push('爆款热销，建议紧急补货');
+      recs.push('Hot seller, urgent replenishment recommended');
     }
     // Shortage
     else if (onHand < safety || daysSupply < 3) {
       status = 'shortage';
       shortage_count++;
       health_score = 20;
-      recs.push('库存严重不足，建议立即补货');
+      recs.push('Severe shortage, immediate replenishment recommended');
     }
     // Near expiry
     else if (ti.near_expiry_units > 0) {
       status = 'near_expiry';
       near_expiry_count++;
       health_score = 40;
-      recs.push(`存在${ti.near_expiry_units}件近效期库存，建议促销清仓`);
+      recs.push(`${ti.near_expiry_units} near-expiry units, clearance promotion recommended`);
     }
     // Slow mover
     else if (avgDaily < 0.1 && daysSupply > 60) {
       status = 'slow';
       slow_count++;
       health_score = 35;
-      recs.push('滞销品，建议调拨或退货');
+      recs.push('Slow mover, transfer or return recommended');
     }
     // Overstock
     else if (daysSupply > 90) {
       status = 'overstock';
       overstock_count++;
       health_score = 45;
-      recs.push('库存积压，建议暂停采购并调拨');
+      recs.push('Overstock, pause procurement and consider transfer');
     }
     // Critical: multiple issues
     else if (onHand < safety && ti.near_expiry_units > 0) {
       status = 'critical';
       critical_count++;
       health_score = 10;
-      recs.push('多重风险：缺货+临期，需紧急处理');
+      recs.push('Multiple risks: shortage + near expiry, urgent action needed');
     }
     else {
       healthy_count++;
       health_score = 85 + Math.min(15, Math.floor((30 - daysSupply) / 2));
-      recs.push('库存健康');
+      recs.push('Inventory healthy');
     }
 
     totalScore += health_score;
@@ -160,7 +160,7 @@ export async function diagnoseInventory(): Promise<{
           to_customer_id: lowest.customer_id,
           to_customer_type: toCust?.customer_type || '',
           transfer_qty: transferQty,
-          reason: `库存不均：${highest.customer_id}(${Math.round(highest.days_of_supply)}天) → ${lowest.customer_id}(${Math.round(lowest.days_of_supply)}天)`,
+          reason: `Imbalance: ${highest.customer_id}(${Math.round(highest.days_of_supply)}days) → ${lowest.customer_id}(${Math.round(lowest.days_of_supply)}days)`,
         });
       }
     }

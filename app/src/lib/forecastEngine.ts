@@ -248,6 +248,167 @@ export async function forecastSkuDemand(
   return result;
 }
 
+export interface BacktestPoint {
+  date: string;
+  actual: number;
+  predicted: number;
+  lowerBound: number;
+  upperBound: number;
+}
+
+export interface BacktestResult {
+  sku_id: string;
+  category: string;
+  points: BacktestPoint[];
+  mape: number;
+  rmse: number;
+}
+
+export async function backtestSkuDemand(
+  sku_id: string,
+  backtestDays: number = 30,
+  customerType: string = 'chain_pharmacy',
+  region: string = 'Sichuan'
+): Promise<BacktestResult> {
+  await dataEngine.init();
+  const product = dataEngine.getProduct(sku_id);
+  const category = product?.category || 'Unknown';
+
+  const daily = dataEngine.getSkuDaily(sku_id);
+  if (daily.length < backtestDays + 14) {
+    return { sku_id, category, points: [], mape: 0, rmse: 0 };
+  }
+
+  daily.sort((a, b) => a.date.localeCompare(b.date));
+
+  // Training set: all data except last backtestDays
+  const trainData = daily.slice(0, -backtestDays);
+  const testData = daily.slice(-backtestDays);
+
+  const trainValues = trainData.map(d => d.units);
+  const model = fitHoltWinters(trainValues, 7);
+  const predictions = predictHW(model, backtestDays);
+
+  const points: BacktestPoint[] = [];
+  let totalError = 0;
+  let totalPctError = 0;
+  let count = 0;
+
+  for (let i = 0; i < backtestDays; i++) {
+    const actual = testData[i].units;
+    const date = testData[i].date;
+
+    // Apply multi-factor adjustment like in forecastSkuDemand
+    const seasonal = getSeasonalFactor(model, i);
+    const epidemic = getEpidemicFactor(date, region);
+    const policy = getPolicyFactor(date, category, dataEngine.policies, customerType);
+    const promotion = getPromotionFactor(trainData, date);
+
+    const baseline = predictions[i];
+    const combined = baseline * epidemic * policy * promotion;
+    const predicted = Math.max(0, combined);
+    const uncertainty = model.rmse * (1 + i * 0.02);
+
+    points.push({
+      date: date.slice(5),
+      actual,
+      predicted: Math.round(predicted * 100) / 100,
+      lowerBound: Math.round(Math.max(0, predicted - 1.96 * uncertainty) * 100) / 100,
+      upperBound: Math.round((predicted + 1.96 * uncertainty) * 100) / 100,
+    });
+
+    totalError += (actual - predicted) ** 2;
+    totalPctError += actual > 0 ? Math.abs(actual - predicted) / actual : 0;
+    count++;
+  }
+
+  const rmse = count > 0 ? Math.sqrt(totalError / count) : 0;
+  const mape = count > 0 ? (totalPctError / count) * 100 : 0;
+
+  return {
+    sku_id,
+    category,
+    points,
+    rmse: Math.round(rmse * 100) / 100,
+    mape: Math.round(mape * 100) / 100,
+  };
+}
+
+export async function backtestCategoryDemand(
+  category: string,
+  backtestDays: number = 30,
+  customerType: string = 'chain_pharmacy',
+  region: string = 'Sichuan'
+): Promise<BacktestResult> {
+  await dataEngine.init();
+
+  // Aggregate all SKU daily data in this category
+  const skus = dataEngine.products.filter(p => p.category === category).map(p => p.sku_id);
+  const allDaily: Record<string, { date: string; units: number }> = {};
+
+  for (const sku_id of skus) {
+    const daily = dataEngine.getSkuDaily(sku_id);
+    for (const d of daily) {
+      if (!allDaily[d.date]) allDaily[d.date] = { date: d.date, units: 0 };
+      allDaily[d.date].units += d.units;
+    }
+  }
+
+  const sorted = Object.values(allDaily).sort((a, b) => a.date.localeCompare(b.date));
+  if (sorted.length < backtestDays + 14) {
+    return { sku_id: category, category, points: [], mape: 0, rmse: 0 };
+  }
+
+  const trainData = sorted.slice(0, -backtestDays);
+  const testData = sorted.slice(-backtestDays);
+
+  const trainValues = trainData.map(d => d.units);
+  const model = fitHoltWinters(trainValues, 7);
+  const predictions = predictHW(model, backtestDays);
+
+  const points: BacktestPoint[] = [];
+  let totalError = 0;
+  let totalPctError = 0;
+  let count = 0;
+
+  for (let i = 0; i < backtestDays; i++) {
+    const actual = testData[i].units;
+    const date = testData[i].date;
+
+    const seasonal = getSeasonalFactor(model, i);
+    const epidemic = getEpidemicFactor(date, region);
+    const policy = getPolicyFactor(date, category, dataEngine.policies, customerType);
+
+    const baseline = predictions[i];
+    const combined = baseline * epidemic * policy;
+    const predicted = Math.max(0, combined);
+    const uncertainty = model.rmse * (1 + i * 0.02);
+
+    points.push({
+      date: date.slice(5),
+      actual,
+      predicted: Math.round(predicted * 100) / 100,
+      lowerBound: Math.round(Math.max(0, predicted - 1.96 * uncertainty) * 100) / 100,
+      upperBound: Math.round((predicted + 1.96 * uncertainty) * 100) / 100,
+    });
+
+    totalError += (actual - predicted) ** 2;
+    totalPctError += actual > 0 ? Math.abs(actual - predicted) / actual : 0;
+    count++;
+  }
+
+  const rmse = count > 0 ? Math.sqrt(totalError / count) : 0;
+  const mape = count > 0 ? (totalPctError / count) * 100 : 0;
+
+  return {
+    sku_id: category,
+    category,
+    points,
+    rmse: Math.round(rmse * 100) / 100,
+    mape: Math.round(mape * 100) / 100,
+  };
+}
+
 export async function forecastCategoryDemand(
   category: string,
   horizon: number = 30,

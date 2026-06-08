@@ -101,8 +101,8 @@ export default function PolicyPage() {
                         : 'border-gray-800 bg-transparent text-slate-400 hover:bg-white/5'
                     }`}
                   >
-                    <div className="font-medium">{s.name}</div>
-                    <div className="text-[10px] opacity-70 mt-0.5">{s.name_en} · {s.effective_date}</div>
+                    <div className="font-medium">{s.name_en}</div>
+                    <div className="text-[10px] opacity-70 mt-0.5">{s.name} · {s.effective_date}</div>
                   </button>
                 ))}
               </div>
