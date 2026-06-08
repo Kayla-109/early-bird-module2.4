@@ -4,9 +4,9 @@ import { defineConfig } from "vite"
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: './',
+  base: '/',
   build: {
-    outDir: 'build',
+    outDir: 'dist',
   },
   plugins: [react()],
   server: {
