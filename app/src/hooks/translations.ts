@@ -313,34 +313,6 @@ export const translations = {
     urgency_high: '高',
     urgency_medium: '中',
     urgency_low: '低',
-    replenishment_current_stock: '当前库存',
-    replenishment_days_supply: '可销天数',
-    replenishment_suggested_qty: '建议订货',
-    replenishment_suggested_date: '建议日期',
-
-    // Alert type labels
-    alert_type_stockout: '缺货预警',
-    alert_type_overstock: '积压告警',
-    alert_type_near_expiry: '临期预警',
-    alert_type_slow_mover: '滞销提醒',
-    alert_severity_critical: '紧急',
-    alert_severity_warning: '警告',
-    alert_severity_info: '提示',
-
-    // Inventory status labels
-    inventory_status_hot: '爆款',
-    inventory_status_slow: '滞销',
-    inventory_status_overstock: '积压',
-    inventory_status_shortage: '缺货',
-    inventory_status_near_expiry: '临期',
-    inventory_status_healthy: '健康',
-
-    // Urgency labels
-    urgency_critical: '紧急',
-    urgency_high: '高',
-    urgency_medium: '中',
-    urgency_low: '低',
-
     // Policy
     policy_title: '政策影响模拟',
     policy_subtitle: '构建模型，模拟药品集采等政策变动对各类药品需求的影响',
@@ -690,10 +662,6 @@ export const translations = {
     urgency_high: 'High',
     urgency_medium: 'Medium',
     urgency_low: 'Low',
-    replenishment_current_stock: 'Current Stock',
-    replenishment_days_supply: 'Days Supply',
-    replenishment_suggested_qty: 'Suggested Order',
-    replenishment_suggested_date: 'Suggested Date',
 
     // Policy
     policy_title: 'Policy Impact Simulation',

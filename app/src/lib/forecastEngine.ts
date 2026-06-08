@@ -299,7 +299,6 @@ export async function backtestSkuDemand(
     const date = testData[i].date;
 
     // Apply multi-factor adjustment like in forecastSkuDemand
-    const seasonal = getSeasonalFactor(model, i);
     const epidemic = getEpidemicFactor(date, region);
     const policy = getPolicyFactor(date, category, dataEngine.policies, customerType);
     const promotion = getPromotionFactor(trainData, date);
@@ -375,7 +374,6 @@ export async function backtestCategoryDemand(
     const actual = testData[i].units;
     const date = testData[i].date;
 
-    const seasonal = getSeasonalFactor(model, i);
     const epidemic = getEpidemicFactor(date, region);
     const policy = getPolicyFactor(date, category, dataEngine.policies, customerType);
 
