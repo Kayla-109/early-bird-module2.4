@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 20% 4%;
+    --foreground: 0 0% 100%;
+    --card: 220 18% 8%;
+    --card-foreground: 0 0% 100%;
+    --popover: 220 18% 8%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 174 100% 43%;
+    --primary-foreground: 220 20% 4%;
+    --secondary: 220 18% 8%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 220 10% 15%;
+    --muted-foreground: 222 20% 70%;
+    --accent: 220 100% 50%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 220 10% 15%;
+    --input: 220 10% 15%;
+    --ring: 174 100% 43%;
+    --radius: 0.5rem;
+    --sidebar-background: 220 18% 8%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 174 100% 43%;
+    --sidebar-primary-foreground: 220 20% 4%;
+    --sidebar-accent: 220 10% 15%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 220 10% 15%;
+    --sidebar-ring: 174 100% 43%;
+  }
+
+  body {
+    font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+    background-color: #0A0C10;
+    color: #FFFFFF;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  }
+
+  code, pre, .font-mono {
+    font-family: 'JetBrains Mono', 'IBM Plex Mono', monospace;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    background: linear-gradient(135deg, #0055FF 0%, #00D9C0 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .border-gradient {
+    border: 1px solid transparent;
+    background: linear-gradient(#0F111A, #0F111A) padding-box,
+                linear-gradient(135deg, rgba(0, 85, 255, 0.5), rgba(0, 217, 192, 0.5)) border-box;
+  }
+
+  .glow-cyan {
+    box-shadow: 0 0 20px rgba(0, 217, 192, 0.15), 0 0 60px rgba(0, 217, 192, 0.05);
+  }
+
+  .glow-blue {
+    box-shadow: 0 0 20px rgba(0, 85, 255, 0.15), 0 0 60px rgba(0, 85, 255, 0.05);
+  }
+}

@@ -1,0 +1,4 @@
+warehouse_id,province,city,warehouse_type,total_area_sqm,ambient_zone_bins,cool_zone_bins,cold_zone_bins,frozen_zone_bins,controlled_zone_bins,max_capacity_units,active_pickers,peak_picker_capacity,next_day_delivery_rate_pct,daily_order_capacity
+WH_001,Shandong,Yantai,regional,42540,7347,2774,2483,244,392,454713,56,231,89.4,11577
+WH_002,Jiangsu,Nanjing,regional,26891,3727,1602,1490,184,202,257492,73,202,89.9,12681
+WH_003,Guangdong,Dongguan,regional,32364,4657,2038,2450,387,239,315857,98,141,94.5,13409
