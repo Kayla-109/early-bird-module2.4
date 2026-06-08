@@ -1,0 +1,4 @@
+policy_id,name,name_en,effective_date,affected_categories,price_cut_pct,demand_shift_hospital,demand_shift_pharmacy
+cvbp_2025,第七批国家集采,7th VBP Procurement,2025-07-01,Western_Medicine,0.51,1.35,0.75
+nrdl_2024,2024医保目录调整,2024 NRDL Update,2025-01-01,Western_Medicine;TCM,0.15,1.15,1.10
+drg_2025,DRG/DIP全面推广,DRG/DIP Expansion,2025-04-01,Western_Medicine;Medical_Devices,0.08,0.95,1.20
